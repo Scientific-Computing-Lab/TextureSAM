@@ -2,6 +2,8 @@
 # TextureSAM
 **TextureSAM** is a texture-aware variant of the Segment Anything Model (SAM), fine-tuned on the ADE20K dataset with texture augmentations. While SAM-2.1 relies on semantic cues, TextureSAM enhances segmentation in texture-dominant scenarios by introducing textures from the Describable Textures Dataset (DTD). Two versions are trained: one that preserves semantic structure and another that fully replaces objects with textures. Evaluated on RWTD (a natural texture-based segmentation dataset) and STMD (a synthetic texture-transition dataset), TextureSAM outperforms SAM-2.1 in capturing texture-based boundaries.
 
+This code is forked and highly based on [**SAM2**](https://github.com/facebookresearch/sam2/tree/main/training) repository by Meta.
+
 ## Available Datasets:
 The datasets used for the evaluation and inference of **TextureSAM** are available at the following link: [**TextureSAM Datasets and checkpoints**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link). 
 
