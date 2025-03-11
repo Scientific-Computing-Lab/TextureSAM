@@ -30,11 +30,24 @@ The following datasets are included:
    ```python
    conda activate texturesam
    ```
-4. Load the TextureSAM checkpoint **sam2.1_hiera_small_0.3.pt** from the following link: [**TextureSAM Datasets and checkpoints**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link).
+4. Load the TextureSAM checkpoint **sam2.1_hiera_small_0.3.pt** and the relevant dataset from the following link: [**TextureSAM Datasets and checkpoints**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link) .
    
 5. Place the sam2.1_hiera_small_0.3.pt file in the directory TextureSAM/sam2/checkpoints/.
 
-6. 
+6. To **train** SAM 2 as described in the paper on ADE20K to produce TextureSAM, load the **ADE20K_0.3** dataset from the  [**TextureSAM Datasets and checkpoints**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link). This dataset is in the correct format for SAM 2 training. Follow the full training instructions provided at TextureSAM/sam2/training which are a fork of the original [**SAM 2 training instructions**](https://github.com/facebookresearch/sam2/tree/main/training).
+   
+7. To run **inference** on TextureSAM, use the TextureSAM/sam2/inference.py script.
+   This will process the input images and produce segmented output images along with corresponding binary masks.
+
+8. Run **Evaluations** on the Provided Datasets:
+   The following evaluation scripts can be used to assess the model's performance on the RWTD, STMD, and ADE20K datasets, both with and without aggregated masks:
+   - eval_agg_masks.py
+   - eval_agg_masks_ADE20K.py
+   - eval_no_agg_masks.py
+   - eval_no_agg_masks_ADE20K.py
+
+- Make sure to set the **correct paths** to the input images, ground truth masks, and any other required resources in each script.
+
 
 
 
