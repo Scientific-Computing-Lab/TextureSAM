@@ -4,17 +4,117 @@
 
 This code is forked and highly based on [**SAM2**](https://github.com/facebookresearch/sam2/tree/main/training) repository by Meta.
 
-## Available Datasets:
+## 1 Datasets
 The datasets used for the evaluation and inference of **TextureSAM** are available at the following link: [**TextureSAM Datasets and checkpoints**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link). 
 
 The following datasets are included: 
- 1.  Kaust256 – The Real World Textures Dataset **(RWTD)**, used for real-world texture-based segmentation evaluation.
- 2.  ADE20K Dataset:
-       - ADE20K_0.3.zip – ADE20K dataset modified with texture augmentation (η ≤ 0.3), suitable for fine-tuning SAM.
-       - ADE20K_real_images – Contains original ADE20K images.
-       - ADE20K_textured_images – Includes ADE20K images with all degrees of texture augmentation (η = 0 to 1).
- 3.  Segmentation_dataset – The **STMD** synthetic test dataset, designed for evaluating texture-based segmentation.
-     The full **STMD** dataset can be found on GitHub:  [**STMD**](https://github.com/mubashar1030/Segmentation_dataset).
+### 1.1 Kaust256 - Real-World Textures Dataset (RWTD)
+The **RWTD** dataset is a collection of real-world images specifically curated to evaluate segmentation models based on texture cues rather than object boundaries. Unlike conventional segmentation datasets that focus on semantic elements, RWTD emphasizes regions where segmentation is defined by texture changes. This dataset provides a realistic test case for models like TextureSAM, which are designed to mitigate the shape bias observed in SAM-2.
+ - Kaust256 contains 256 images.
+ - **Textured images** are also provided, generated using an ADE20K-based filtering process.
+ - Labels are binary segmentation masks provided in PNG format.
+```
+    |-- Kaust256
+        |-- images
+        |   |-- 101.jpg
+        |   |-- 102.jpg
+        |   |-- 103.jpg
+        |   |-- ...
+        |-- labels
+        |   |-- 101.png
+        |   |-- 102.png
+        |   |-- 103.png
+        |   |-- ...
+        |-- images_textured
+            |-- 101.jpg
+            |-- 102.jpg
+            |-- 103.jpg
+            |-- ...
+```
+
+### 1.2 ADE20K Dataset
+The **ADE20K** dataset is widely used for scene parsing and semantic segmentation. It includes over 20,000 images with dense annotations spanning 150 semantic categories. To facilitate texture-aware segmentation, multiple versions of ADE20K have been generated:
+1. **ADE20K_0.3** : ADE20K dataset modified with texture augmentation (η ≤ 0.3), provided in the SAM-compatible format. Each image is paired with a corresponding annotation JSON file, making it suitable for fine-tuning SAM to balance texture and semantic segmentation.
+2. **ADE20K_real_images**: The original ADE20K dataset without modifications.
+This directory contains real ADE20K images along with their corresponding ground truth (GT) instance masks. The dataset is organized into two main subdirectories:
+ - ADE20K_unified_gt_instances: Stores unified ground truth instance masks.
+ - images: Stores the original ADE20K images.
+ - gt_instances: Contains individual instance segmentation masks for each image.
+
+ADE20K_unified_gt_instances: Stores unified ground truth instance masks.
+gt_instances: Contains individual instance segmentation masks for each image.
+images: Stores the original ADE20K images.
+4. **ADE20K_textured_images**: Includes ADE20K images with all degrees of texture augmentation (η = 0 to 1) . These images are designed to decouple shape and texture by replacing object semantics with textures sampled from the **Describable Textures Dataset (DTD)**.
+
+The **evaluation** of TextureSAM was conducted using the **ADE20K_real_images**.
+
+```
+   ├── ADE20K_0.3/
+   │   ├── ADE_train_00000037_textured_degree0_0.jpg
+   │   ├── ADE_train_00000037_textured_degree0_0.json
+   │   ├── ADE_train_00000037_textured_degree0_1.jpg
+   │   ├── ADE_train_00000037_textured_degree0_1.json
+   │   ├── ADE_train_00000037_textured_degree0_2.jpg
+   │   ├── ADE_train_00000037_textured_degree0_2.json
+   │   ├── ADE_train_00000037_textured_degree0_3.jpg
+   │   ├── ADE_train_00000037_textured_degree0_3.json
+   │   ├── ADE_train_00000037.jpg
+   │   ├── ADE_train_00000037.json
+   │   └── ...
+
+```
+
+```
+ADE20K_real_images/
+    ├── ADE20K_unified_gt_instances/
+    │   ├── unified_ADE_val_00000001.png
+    │   ├── unified_ADE_val_00000002.png
+    │   ├── unified_ADE_val_00000003.png
+    │   └── ...
+    ├── gt_instances/
+    │   ├── instance_000_ADE_val_00000001.png
+    │   ├── instance_001_ADE_val_00000001.png
+    │   ├── instance_000_ADE_val_00000002.png
+    │   ├── instance_001_ADE_val_00000002.png
+    │   └── ...
+    ├── images/
+    │   ├── ADE_val_00000001.jpg
+    │   ├── ADE_val_00000002.jpg
+    │   ├── ADE_val_00000003.jpg
+    │   └── ...
+```
+
+### 1.3 Synthetic Textured Masks Dataset (STMD)
+The STMD dataset is a synthetic benchmark that evaluates segmentation models in a controlled texture-only environment. The **Test Datset** is available at the following link: [**Segmentation_dataset**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link).
+Unlike RWTD, this dataset eliminates object boundaries and contains images composed purely of texture transitions. By isolating segmentation performance to texture cues alone, STMD provides a rigorous assessment of a model's ability to distinguish regions based solely on texture variations. The full STMD dataset is available on GitHub:  [**STMD**](https://github.com/mubashar1030/Segmentation_dataset) .
+ - Segmentation dataset contains 10,000 masks.
+ - Each mask has 5 images with random textures for each region, resulting in a total of 50,000 images.
+ - Training Set: 42,000 images.
+ - Validation Set: 3,000 images.
+ - Test Set: 5,000 images.
+
+The [**Segmentation_dataset**](https://drive.google.com/drive/folders/1pUJLa898WYEcb4Y_sOaXsSVe-CsPkwRv?usp=drive_link) stored in Google Drive is organized as follows:
+ - images_test/ – Contains test images used for model evaluation.
+ - images_textured/ – Includes images processed with the ADE20K filter to enhance texture-based segmentation challenges.
+ - labels_test/ – Stores the segmentation masks corresponding to the test images, serving as ground truth for evaluation.
+ - test.txt – Lists the file paths of all test images, ensuring consistency in dataset loading.
+ - train.txt – Contains the file paths for training images.
+ - val.txt – Includes the file paths for validation images, used to monitor performance during training.
+ 
+ The **evaluation** of TextureSAM was conducted using the images_test/ and labels_test/ . The test.txt file was used to define the dataset split.
+```
+Segmentation_dataset/
+│── images_test/
+│   ├── 7.jpg
+│   ├── 17.jpg
+│   ├── 18.jpg
+│   └── ...
+│── labels_test/
+│   ├── 7.png
+│   ├── 17.png
+│   ├── 18.png
+│   └── ...
+```
 
 ### Using this code, you can:
 - Fine-tune TextureSAM on custom texture datasets, including ADE20K.
