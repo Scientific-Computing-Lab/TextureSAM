@@ -135,13 +135,11 @@ def main():
                 if rwtd_dataset:
                     iou_score_inverse = mean_iou(pred_label_tensor_inverse.unsqueeze(0), label_tensor_inverse.unsqueeze(0), num_classes=n_classes)
                     mean_iou_score = (iou_score.item() + iou_score_inverse.item()) / 2
-                    max_iou_score = max(iou_score.item(), iou_score_inverse.item())
                 else:
                     mean_iou_score = iou_score.item()
-                    max_iou_score = iou_score.item()
 
-                print(f"Mean IoU score for {filename}: {max_iou_score}")
-                results_data.append({"Filename": filename, "MeanIoU": mean_iou_score, "MaxIoU": max_iou_score})
+                print(f"Mean IoU score for {filename}: {mean_iou_score}")
+                results_data.append({"Filename": filename, "MeanIoU": mean_iou_score})
             except Exception as e:
                 print(f"Error calculating IoU for {filename}: {e}")
 
